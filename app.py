@@ -6,6 +6,7 @@ from flask_wtf import FlaskForm
 
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 
@@ -16,6 +17,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'a018ddb39a56d24e179255f0fa7f509ff9b215a905cbf1a15e56a32b465e319a542227eb50d3428de14d51c27c17d775852cf14ab0'
 
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -58,6 +60,14 @@ def login():
 @app.route('/regester', methods=('GET', 'POST'))  
 def regester():
     form = RegisterForm()
+
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.date)
+        new_user = User(username=form.username.date, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        return redirect(url_for('login'))
     return render_template('regester.html', form=form)
 
 if __name__ == '__main__':

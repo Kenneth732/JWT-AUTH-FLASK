@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, redirect, request, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, login_user, login_manager, login_required, logout_user, current_user
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 
 from wtforms import StringField, PasswordField, SubmitField
@@ -18,6 +18,16 @@ app.config['SECRET_KEY'] = 'a018ddb39a56d24e179255f0fa7f509ff9b215a905cbf1a15e56
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -52,9 +62,16 @@ class LoginForm(FlaskForm):
 def home():
     return render_template('index.html')
 
+
 @app.route('/login', methods=('GET', 'POST'))
 def login():
     form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if bcrypt.check_password_hash(user.password, form.password.data):
+                login_user(user)
+                return redirect(url_for('dashboard'))
     return render_template('login.html', form=form)
 
 @app.route('/regester', methods=('GET', 'POST'))  
@@ -69,6 +86,12 @@ def regester():
         return redirect(url_for('login'))
     
     return render_template('regester.html', form=form)
+
+@app.route('/dashboard', methods=('GET', 'POST'))
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

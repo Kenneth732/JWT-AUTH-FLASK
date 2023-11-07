@@ -74,8 +74,8 @@ def login():
                 return redirect(url_for('dashboard'))
     return render_template('login.html', form=form)
 
-@app.route('/regester', methods=('GET', 'POST'))  
-def regester():
+@app.route('/register', methods=('GET', 'POST'))  
+def register():
     form = RegisterForm()
 
     if form.validate_on_submit():
@@ -85,7 +85,7 @@ def regester():
         db.session.commit()
         return redirect(url_for('login'))
     
-    return render_template('regester.html', form=form)
+    return render_template('register.html', form=form)
 
 @app.route('/dashboard', methods=('GET', 'POST'))
 @login_required

@@ -1,0 +1,86 @@
+I'll explain the code line by line to help you understand what each part is doing in your Flask application:
+
+```python
+import os
+```
+
+- This line imports the `os` module, which is used for interacting with the operating system, allowing you to access the file system and environment variables.
+
+```python
+from flask import Flask, render_template, redirect, request, url_for
+```
+
+- These lines import various functions and classes from the Flask framework, including the `Flask` class, which is used to create your web application, and other components for rendering templates, handling redirects, processing HTTP requests, and generating URLs.
+
+```python
+from flask_sqlalchemy import SQLAlchemy
+```
+
+- This line imports the `SQLAlchemy` extension for Flask, which provides a way to interact with a relational database in your application.
+
+```python
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+```
+
+- These lines import components related to user authentication and session management, including `UserMixin` for user models, `login_user` for login, `LoginManager` for session management, `login_required` for protecting routes, `logout_user` for logging out, and `current_user` to access the current user's information.
+
+```python
+from flask_wtf import FlaskForm
+```
+
+- This line imports `FlaskForm` from the Flask-WTF extension, which is used for creating and validating web forms in your application.
+
+```python
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import InputRequired, Length, ValidationError
+```
+
+- These lines import form field types and validators from WTForms, which you'll use to create and validate the registration and login forms in your application.
+
+```python
+from flask_bcrypt import Bcrypt
+```
+
+- This line imports the `Bcrypt` extension for Flask, which is used to hash and verify passwords securely.
+
+```python
+app = Flask(__name__)
+```
+
+- This line creates a Flask application instance named `app`. You'll use this instance to define your routes and configure your application.
+
+```python
+basedir = os.path.abspath(os.path.dirname(__file__))
+```
+
+- This line defines the `basedir` variable, which stores the absolute path of the directory where your Python script is located.
+
+```python
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
+```
+
+- Here, you set the configuration for your application. You configure the SQLAlchemy database URI to use an SQLite database located in the `basedir`.
+
+```python
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+```
+
+- This configuration option disables tracking of modifications to the database, which can improve performance.
+
+```python
+app.config['SECRET_KEY'] = 'a018ddb39a56d24e179255f0fa7f509ff9b215a905cbf1a15e56a32b465e319a542227eb50d3428de14d51c27c17d775852cf14ab0'
+```
+
+- Here, you set a secret key for your application. This is used for securely signing session cookies and other security-related operations.
+
+The code continues to define the SQLAlchemy database, the login manager, user model, and the forms used for registration and login. Then, it defines the routes for your application:
+
+- `/`: Renders the homepage.
+- `/login`: Handles user login.
+- `/register`: Handles user registration.
+- `/dashboard`: Renders the dashboard for logged-in users.
+- `/logout`: Logs out the user and redirects to the login page.
+
+Finally, if the script is executed as the main module, it starts the Flask application in debug mode using `app.run(debug=True)`.
+
+This code sets up the foundation of your Flask web application, including routes, database configuration, and user authentication.

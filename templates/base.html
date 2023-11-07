@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} {% endblock %} - Home</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="content">
+    <div class="cotainer">
 
         <header>
             <nav>
+                <h2>Create Studio</h2>
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/">About</a></li>
                     <li><a href="/">Contact</a></li>
-                    <li><a href="{{ url_for('regester') }}">Regester</a></li>
+                    <li><a href="{{ url_for('register') }}">Regester</a></li>
                     <li><a href="{{ url_for('login') }}">Login</a></li>
                 </ul>
             </nav>

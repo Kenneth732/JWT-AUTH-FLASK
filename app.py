@@ -50,13 +50,15 @@ class LoginForm(FlaskForm):
 def home():
     return render_template('index.html')
 
-@app.route('/login')
+@app.route('/login', methods=('GET', 'POST'))
 def login():
-    return render_template('login.html')
+    form = LoginForm()
+    return render_template('login.html', form=form)
 
-@app.route('/register')  # Corrected the route
-def register():
-    return render_template('register.html')
+@app.route('/regester', methods=('GET', 'POST'))  
+def regester():
+    form = RegisterForm()
+    return render_template('regester.html', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)

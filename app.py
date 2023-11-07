@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, redirect, request, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin
+from flask_login import UserMixin, login_user, login_manager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 
 from wtforms import StringField, PasswordField, SubmitField
@@ -62,12 +62,12 @@ def regester():
     form = RegisterForm()
 
     if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.date)
-        new_user = User(username=form.username.date, password=hashed_password)
+        hashed_password = bcrypt.generate_password_hash(form.password.data)
+        new_user = User(username=form.username.data, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
-
         return redirect(url_for('login'))
+    
     return render_template('regester.html', form=form)
 
 if __name__ == '__main__':
